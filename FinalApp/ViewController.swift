@@ -15,7 +15,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     
     let locationManager = CLLocationManager()
-    let regionInMeters: Double = 10000
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,9 +30,9 @@ class ViewController: UIViewController {
     // Center the view map to the current user location
     func centerViewOnUserLocation() {
         if let location = locationManager.location?.coordinate {
-            var span: MKCoordinateSpan=(center: location, latitudinalMeters: regionInMeters, longitudinalMeters: regionInMeters)
+            var span = MKCoordinateSpanMake(0.5, 0.5)
             //Creates a new coordinate region from the specified coordinate and distance values.
-            let region = MKCoordinateRegion.init(span)
+            let region = MKCoordinateRegion.init(center:location , span: span)
             mapView.setRegion(region, animated: true)
         }
     }
@@ -76,11 +75,12 @@ extension ViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
-        let region = MKCoordinateRegion.init(center: location.coordinate, latitudinalMeters: regionInMeters, longitudinalMeters: regionInMeters)
+        var span = MKCoordinateSpanMake(0.5, 0.5)
+        let region = MKCoordinateRegion.init(center: location.coordinate, span: span)
         mapView.setRegion(region, animated: true)
     }
-    
-    
+
+
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         checkLocationServices()
     }
