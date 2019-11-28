@@ -17,6 +17,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var adressLabel: UILabel!
     let locationManager = CLLocationManager()
      var previousLocation: CLLocation?
+     var directionsArray: [MKDirections] = []
+    let geoCoder = CLGeocoder()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,6 +84,51 @@ class ViewController: UIViewController {
         
         return CLLocation(latitude: latitude, longitude: longitude)
     }
+    
+    func getDirections() {
+        guard let location = locationManager.location?.coordinate else {
+            //TODO: Inform user we don't have their current location
+            return
+        }
+        
+        let request = createDirectionsRequest(from: location)
+        let directions = MKDirections(request: request)
+        resetMapView(withNew: directions)
+        
+        directions.calculate { [unowned self] (response, error) in
+            //TODO: Handle error if needed
+            guard let response = response else { return } //TODO: Show response not available in an alert
+            
+            for route in response.routes {
+                self.mapView.add(route.polyline)
+                self.mapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+            }
+        }
+    }
+    
+    
+    func createDirectionsRequest(from coordinate: CLLocationCoordinate2D) -> MKDirections.Request {
+        let destinationCoordinate       = getCenterLocation(for: mapView).coordinate
+        let startingLocation            = MKPlacemark(coordinate: coordinate)
+        let destination                 = MKPlacemark(coordinate: destinationCoordinate)
+        
+        let request                     = MKDirections.Request()
+        request.source                  = MKMapItem(placemark: startingLocation)
+        request.destination             = MKMapItem(placemark: destination)
+        request.transportType           = .automobile
+        request.requestsAlternateRoutes = true
+        
+        return request
+    }
+    func resetMapView(withNew directions: MKDirections) {
+        mapView.removeOverlays(mapView.overlays)
+        directionsArray.append(directions)
+        let _ = directionsArray.map { $0.cancel() }
+    }
+    
+    @IBAction func goButtonTapped(_ sender: UIButton) {
+        getDirections()
+    }
 }
 
 
@@ -131,4 +178,11 @@ extension ViewController: MKMapViewDelegate {
             }
         }
 }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let renderer = MKPolylineRenderer(overlay: overlay as! MKPolyline)
+        renderer.strokeColor = .blue
+        
+        return renderer
+    }
 }
