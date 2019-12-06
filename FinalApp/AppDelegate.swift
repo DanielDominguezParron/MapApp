@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,GIDSignInDelegate{
         FirebaseApp.configure()
         GIDSignIn.sharedInstance().clientID=FirebaseApp.app()?.options.clientID
         GIDSignIn.sharedInstance().delegate=self
+        var viewController:ViewController=ViewController()
         return true
     }
     @available(iOS 9.0, *)
@@ -49,7 +50,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate,GIDSignInDelegate{
                 print(error)
                 return
             }
-            //ViewController.performSegue(withIdentifier: "segueMap", sender: self)
+            self.window?.rootViewController?.performSegue(withIdentifier: "segueMap", sender: self)
+            
             let uid=Auth.auth().currentUser?.uid
             let db=Firestore.firestore()
             db.collection("cities").document(uid!).setData([

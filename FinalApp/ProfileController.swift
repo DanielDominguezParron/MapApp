@@ -8,6 +8,7 @@
 
 import UIKit
 import FirebaseAuth
+import Firebase
 class ProfileController: UIViewController,UINavigationBarDelegate {
     @IBOutlet weak var navBar: UINavigationBar!
     
@@ -15,8 +16,23 @@ class ProfileController: UIViewController,UINavigationBarDelegate {
         super.viewDidLoad()
         navBar.delegate=self
         UINavigationBar.appearance().backgroundColor=UIColor.blue
-       
+       fetchdata()
         
+    }
+    func fetchdata(){
+       let db=Firestore.firestore()
+                let userID = Auth.auth().currentUser?.uid
+       // db.collection("users").document(userID!).getDocument(completion: )
+//        ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
+//            // Get user value
+//            let value = snapshot.value as? NSDictionary
+//            let username = value?["username"] as? String ?? ""
+//            let user = User(username: username)
+//
+//            // ...
+//        }) { (error) in
+//            print(error.localizedDescription)
+//        }
     }
     @IBAction func LogOut(_ sender: UIBarButtonItem) {
         print("Logout tapped")
@@ -24,9 +40,7 @@ class ProfileController: UIViewController,UINavigationBarDelegate {
         
         do {
             try auth.signOut()
-            let loginController=LoginController()
-            let vc = self.storyboard?.instantiateViewController(withIdentifier: profileVC) as! ProfileController
-            self.present(vc, animated: true, completion: nil)
+            self.performSegue(withIdentifier: "logout", sender: self)
             print("Successfully signed out of Firebase Auth")
         } catch (let err) {
             print(err.localizedDescription)

@@ -13,7 +13,7 @@
         <!--Map Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" userLabel="Map Controller" customClass="ViewController" customModule="FinalApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="map" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" userLabel="Map Controller" customClass="ViewController" customModule="FinalApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -97,7 +97,7 @@
         <!--Profile Controller-->
         <scene sceneID="uKI-e3-o1a">
             <objects>
-                <viewController storyboardIdentifier="profileVC" id="sp5-jG-ElU" userLabel="Profile Controller" customClass="ProfileController" customModule="FinalApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="profileVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="sp5-jG-ElU" userLabel="Profile Controller" customClass="ProfileController" customModule="FinalApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ywt-vt-GmR">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -133,6 +133,7 @@
                     </view>
                     <connections>
                         <outlet property="navBar" destination="aeV-j2-HPc" id="skR-IF-nHT"/>
+                        <segue destination="ltq-Ba-F6O" kind="show" identifier="logout" id="jLK-5h-syY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SRD-Gx-Gkr" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -142,7 +143,7 @@
         <!--Login Controller-->
         <scene sceneID="Nb5-Uj-1R3">
             <objects>
-                <viewController id="ltq-Ba-F6O" customClass="LoginController" customModule="FinalApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginVC" id="ltq-Ba-F6O" customClass="LoginController" customModule="FinalApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="TRZ-3Z-Jw7">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
