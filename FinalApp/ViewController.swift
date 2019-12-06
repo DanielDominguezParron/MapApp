@@ -44,8 +44,9 @@ class ViewController: UIViewController {
     //Check if gps servies are enabled
     func checkLocationServices() {
         if CLLocationManager.locationServicesEnabled() {
-            setupLocationManager()
             checkLocationAuthorization()
+            setupLocationManager()
+            
         } else {
             // Show alert letting the user know they have to turn this on.
         }
