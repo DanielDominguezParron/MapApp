@@ -12,6 +12,11 @@
 		6B45DF48238FD46A00AAFB0D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B45DF46238FD46A00AAFB0D /* Main.storyboard */; };
 		6B45DF4A238FD46B00AAFB0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B45DF49238FD46B00AAFB0D /* Assets.xcassets */; };
 		6B45DF4D238FD46B00AAFB0D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B45DF4B238FD46B00AAFB0D /* LaunchScreen.storyboard */; };
+		D934E6067D6967FA778058B5 /* Pods_FinalApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA21975ABAC2819275281E30 /* Pods_FinalApp.framework */; };
+		E00AA624239C593C0000A561 /* CoreDataCRUD.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E00AA621239C593C0000A561 /* CoreDataCRUD.xcdatamodeld */; };
+		E07165C92393028800FCA5BF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E07165C82393028700FCA5BF /* GoogleService-Info.plist */; };
+		E07165CB2393058D00FCA5BF /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07165CA2393058D00FCA5BF /* LoginController.swift */; };
+		E0D3139F2398647C0096F31E /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D3139E2398647C0096F31E /* ProfileController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +27,14 @@
 		6B45DF49238FD46B00AAFB0D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6B45DF4C238FD46B00AAFB0D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6B45DF4E238FD46B00AAFB0D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D4061C5AF0D43D3222D2997D /* Pods-FinalApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FinalApp.release.xcconfig"; path = "Target Support Files/Pods-FinalApp/Pods-FinalApp.release.xcconfig"; sourceTree = "<group>"; };
+		DA21975ABAC2819275281E30 /* Pods_FinalApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FinalApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E00AA622239C593C0000A561 /* CoreDataCRUD.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataCRUD.xcdatamodel; sourceTree = "<group>"; };
+		E00AA623239C593C0000A561 /* coredata.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = coredata.xcdatamodel; sourceTree = "<group>"; };
+		E07165C82393028700FCA5BF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E07165CA2393058D00FCA5BF /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		E0D3139E2398647C0096F31E /* ProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
+		EEB56B1297B4CDF75D76708B /* Pods-FinalApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FinalApp.debug.xcconfig"; path = "Target Support Files/Pods-FinalApp/Pods-FinalApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +73,10 @@
 				6B45DF49238FD46B00AAFB0D /* Assets.xcassets */,
 				6B45DF4B238FD46B00AAFB0D /* LaunchScreen.storyboard */,
 				6B45DF4E238FD46B00AAFB0D /* Info.plist */,
+				E07165C82393028700FCA5BF /* GoogleService-Info.plist */,
+				E07165CA2393058D00FCA5BF /* LoginController.swift */,
+				E0D3139E2398647C0096F31E /* ProfileController.swift */,
+				E00AA621239C593C0000A561 /* CoreDataCRUD.xcdatamodeld */,
 			);
 			path = FinalApp;
 			sourceTree = "<group>";
@@ -136,6 +153,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				6B45DF45238FD46A00AAFB0D /* ViewController.swift in Sources */,
+				E07165CB2393058D00FCA5BF /* LoginController.swift in Sources */,
+				E00AA624239C593C0000A561 /* CoreDataCRUD.xcdatamodeld in Sources */,
 				6B45DF43238FD46A00AAFB0D /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -332,6 +351,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		E00AA621239C593C0000A561 /* CoreDataCRUD.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				E00AA622239C593C0000A561 /* CoreDataCRUD.xcdatamodel */,
+				E00AA623239C593C0000A561 /* coredata.xcdatamodel */,
+			);
+			currentVersion = E00AA622239C593C0000A561 /* CoreDataCRUD.xcdatamodel */;
+			path = CoreDataCRUD.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 6B45DF37238FD46A00AAFB0D /* Project object */;
 }
