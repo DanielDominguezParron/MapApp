@@ -16,8 +16,8 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var adressLabel: UILabel!
     let locationManager = CLLocationManager()
-     var previousLocation: CLLocation?
-     var directionsArray: [MKDirections] = []
+    var previousLocation: CLLocation?
+    var directionsArray: [MKDirections] = []
     let geoCoder = CLGeocoder()
     
     override func viewDidLoad() {
@@ -55,7 +55,7 @@ class ViewController: UIViewController {
     //Check the authorization
     func checkLocationAuthorization() {
         switch CLLocationManager.authorizationStatus() {
-            //If the user approves the auth,map start user location
+        //If the user approves the auth,map start user location
         case .authorizedWhenInUse:
             startTackingUserLocation()
             break
@@ -71,6 +71,7 @@ class ViewController: UIViewController {
             break
         }
     }
+    //This func center the view if the user is moving and update his position
     func startTackingUserLocation() {
         mapView.showsUserLocation = true
         centerViewOnUserLocation()
@@ -78,14 +79,13 @@ class ViewController: UIViewController {
         previousLocation = getCenterLocation(for: mapView)
     }
     
-    
     func getCenterLocation(for mapView: MKMapView) -> CLLocation {
         let latitude = mapView.centerCoordinate.latitude
         let longitude = mapView.centerCoordinate.longitude
         
         return CLLocation(latitude: latitude, longitude: longitude)
     }
-    
+    //Create the route from user location to the marked location
     func getDirections() {
         guard let location = locationManager.location?.coordinate else {
             //TODO: Inform user we don't have their current location
@@ -107,7 +107,7 @@ class ViewController: UIViewController {
         }
     }
     
-    
+    //Create the direction from user current location and the destination selected with the pin
     func createDirectionsRequest(from coordinate: CLLocationCoordinate2D) -> MKDirections.Request {
         let destinationCoordinate       = getCenterLocation(for: mapView).coordinate
         let startingLocation            = MKPlacemark(coordinate: coordinate)
@@ -141,18 +141,19 @@ extension ViewController: CLLocationManagerDelegate {
         let region = MKCoordinateRegion.init(center: location.coordinate, span: span)
         mapView.setRegion(region, animated: true)
     }
-
-
+    
+    
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         checkLocationServices()
     }
 }
+//With geocoder we can get the adress of the selected location
 extension ViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         let center = getCenterLocation(for: mapView)
         let geoCoder = CLGeocoder()
-        
+        //Store the previousLocation
         guard let previousLocation = self.previousLocation else { return }
         
         guard center.distance(from: previousLocation) > 50 else { return }
@@ -178,8 +179,8 @@ extension ViewController: MKMapViewDelegate {
                 self?.adressLabel.text = "\(streetNumber) \(streetName)"
             }
         }
-}
-    
+    }
+    //Draw with a blue line the route
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let renderer = MKPolylineRenderer(overlay: overlay as! MKPolyline)
         renderer.strokeColor = .blue

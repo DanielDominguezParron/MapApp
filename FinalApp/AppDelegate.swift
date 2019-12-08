@@ -13,15 +13,15 @@ import CoreData
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate,GIDSignInDelegate{
     var window: UIWindow?
-
-   
+    var mail:String?
+    
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
         GIDSignIn.sharedInstance().clientID=FirebaseApp.app()?.options.clientID
         GIDSignIn.sharedInstance().delegate=self
-       // var viewController:ViewController=ViewController()
+        // var viewController:ViewController=ViewController()
         return true
     }
     @available(iOS 9.0, *)
@@ -35,63 +35,65 @@ class AppDelegate: UIResponder, UIApplicationDelegate,GIDSignInDelegate{
             print("\(error.localizedDescription)")
         } else {
             let idToken = user.authentication.idToken
-        // User authentication
-        guard let authentication = user.authentication else { return }
-        //Store the google credential
-        let credential = GoogleAuthProvider.credential(withIDToken:idToken!, accessToken: authentication.accessToken)
-        
-        Auth.auth().signInAndRetrieveData(with: credential) { (authResult, error) in
-            if let error = error {
-                print("Firebase sign in error")
-                print(error)
-                return
-            }
-            //Segue to map screen
-            self.window?.rootViewController?.performSegue(withIdentifier: "segueMap", sender: self)
-            //Store the data from the current user into firestore
-            let uid=Auth.auth().currentUser?.uid
-            let db=Firestore.firestore()
-            db.collection("cities").document(uid!).setData([
-                "name": user.profile.name,
-                "mail": user.profile.email
-                ])
-            { err in
-                if let err = err {
-                    print("Error adding document: \(err)")
-                } else {
-                    print("Document successfully written!")
+            // User authentication
+            guard let authentication = user.authentication else { return }
+            //Store the google credential
+            let credential = GoogleAuthProvider.credential(withIDToken:idToken!, accessToken: authentication.accessToken)
+            
+            Auth.auth().signInAndRetrieveData(with: credential) { (authResult, error) in
+                if let error = error {
+                    print("Firebase sign in error")
+                    print(error)
+                    return
                 }
+                self.mail=user.profile.email
+                self.addCoreData()
+                //Segue to map screen
+                self.window?.rootViewController?.performSegue(withIdentifier: "segueMap", sender: self)
+                //Store the data from the current user into firestore
+                let uid=Auth.auth().currentUser?.uid
+                let db=Firestore.firestore()
+                db.collection("users").document(uid!).setData([
+                    "name": user.profile.name,
+                    "mail": self.mail!
+                    ])
+                { err in
+                    if let err = err {
+                        print("Error adding document: \(err)")
+                    } else {
+                        print("Document successfully written!")
+                    }
+                }
+                print("User is signed in with Firebase")
             }
-            print("User is signed in with Firebase")
+            
         }
-        
-    }
     }
     
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
         // Perform any operations when the user disconnects from app here.
         print("User has disconnected")
     }
-
-
+    
+    
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
     }
-
+    
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     }
-
+    
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
     }
-
+    
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
-
+    
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
@@ -134,6 +136,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate,GIDSignInDelegate{
                 let nserror = error as NSError
                 fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }
+        }
+    }
+    func addCoreData(){
+        
+        
+        //As we know that container is set up in the AppDelegates so we need to refer that container.
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        
+        //We create a context from this container
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        //Now let’s create an entity and new user records.
+        let userEntity = NSEntityDescription.entity(forEntityName: "User", in: managedContext)!
+        
+        //finally, we need to add some data to our created record for each key using set value
+        let user = NSManagedObject(entity: userEntity, insertInto: managedContext)
+        user.setValue(self.mail!, forKey: "mail")
+        
+        //Now we have set all the values. The next step is to save it inside the Core Data
+        
+        do {
+            try managedContext.save()
+            
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
         }
     }
 }

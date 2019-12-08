@@ -11,28 +11,28 @@ import FirebaseAuth
 import Firebase
 class ProfileController: UIViewController,UINavigationBarDelegate {
     @IBOutlet weak var navBar: UINavigationBar!
-    
+    @IBOutlet weak var mail: UILabel!
+    @IBOutlet weak var name: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
         navBar.delegate=self
-        UINavigationBar.appearance().backgroundColor=UIColor.blue
+        UINavigationBar.appearance().backgroundColor=UIColor.white
         fetchdata()
         
     }
+    //Fetch data from firebase and adding to text fields in view.
     func fetchdata(){
-       let db=Firestore.firestore()
-                let userID = Auth.auth().currentUser?.uid
-       // db.collection("users").document(userID!).getDocument(completion: )
-//        ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
-//            // Get user value
-//            let value = snapshot.value as? NSDictionary
-//            let username = value?["username"] as? String ?? ""
-//            let user = User(username: username)
-//
-//            // ...
-//        }) { (error) in
-//            print(error.localizedDescription)
-//        }
+        let db=Firestore.firestore()
+        let docRef = db.collection("users").document((Auth.auth().currentUser?.uid)!)
+        
+        docRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                self.name.text=document.data()!["name"] as! String
+                self.mail.text=document.data()!["mail"] as! String
+            } else {
+                print("Document does not exist")
+            }
+        }
     }
     //Logout button action that sign out current user
     @IBAction func LogOut(_ sender: UIBarButtonItem) {
@@ -50,5 +50,5 @@ class ProfileController: UIViewController,UINavigationBarDelegate {
         } catch (let err) {
             print(err.localizedDescription)
         }
-        }
+    }
 }

@@ -12,7 +12,7 @@ import FirebaseAuth
 import CoreData
 import Firebase
 class LoginController: UIViewController {
- 
+    
     @IBOutlet weak var emailTxt: UITextField!
     @IBOutlet weak var idTxt: UITextField!
     @IBOutlet weak var passwordTxt: UITextField!
@@ -21,11 +21,7 @@ class LoginController: UIViewController {
     @IBOutlet weak var nameTxt: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
-        let data=retrieveData()
-        print(data)
-        if !data.isEmpty {
-            self.performSegue(withIdentifier: "segueMap", sender: self)
-        }
+        retrieveData()
         GIDSignIn.sharedInstance()?.presentingViewController = self
     }
     
@@ -39,7 +35,7 @@ class LoginController: UIViewController {
         if (!emailTxt.text!.isEmpty && !passwordTxt.text!.isEmpty){
             //Selected signIn
             if segmentControl.selectedSegmentIndex==0{
-              //Authentication with the input text values
+                //Authentication with the input text values
                 Auth.auth().signIn(withEmail: emailTxt.text!, password: passwordTxt.text!,completion:  { (user, error) in
                     if user != nil
                     {
@@ -47,13 +43,19 @@ class LoginController: UIViewController {
                         self.addCoreData()
                         //Segue to map screen
                         self.performSegue(withIdentifier: "segueMap", sender: self)
-                        //alert
                         print("Login correcto")
                     }
                     else{
                         //Print the error login
                         if let myError=error?.localizedDescription{
-                            print(myError)
+                            // create the alert
+                            let alert = UIAlertController(title: "Error", message: myError, preferredStyle: UIAlertController.Style.alert)
+                            
+                            // add an action (button)
+                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+                            
+                            // show the alert
+                            self.present(alert, animated: true, completion: nil)
                         }
                         else{
                             print("Error")
@@ -83,12 +85,17 @@ class LoginController: UIViewController {
                                 print("Document successfully written!")
                             }
                         }
-                        
-                        //alert
                     }
                     else{
                         if let myError=error?.localizedDescription{
-                            print(myError)
+                            // create the alert
+                            let alert = UIAlertController(title: "Error", message: myError, preferredStyle: UIAlertController.Style.alert)
+                            
+                            // add an action (button)
+                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+                            
+                            // show the alert
+                            self.present(alert, animated: true, completion: nil)
                         }
                         else{
                             print("Error")
@@ -100,31 +107,29 @@ class LoginController: UIViewController {
     }
     func addCoreData(){
         
-            
-            //As we know that container is set up in the AppDelegates so we need to refer that container.
-            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-            
-            //We create a context from this container
-            let managedContext = appDelegate.persistentContainer.viewContext
-            
-            //Now let’s create an entity and new user records.
-            let userEntity = NSEntityDescription.entity(forEntityName: "User", in: managedContext)!
-            
-            //final, we need to add some data to our newly created record for each keys using
-            //here adding data
         
-                let user = NSManagedObject(entity: userEntity, insertInto: managedContext)
-         user.setValue(self.emailTxt.text!, forKey: "mail")
+        //As we know that container is set up in the AppDelegates so we need to refer that container.
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        
+        //We create a context from this container
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        //Now let’s create an entity and new user records.
+        let userEntity = NSEntityDescription.entity(forEntityName: "User", in: managedContext)!
+        
+        //finally, we need to add some data to our created record for each key using set value
+        let user = NSManagedObject(entity: userEntity, insertInto: managedContext)
+        user.setValue(self.emailTxt.text!, forKey: "mail")
+       print( user.setValue(self.emailTxt.text!, forKey: "mail"))
+        //Now we have set all the values. The next step is to save it inside the Core Data
+        
+        do {
+            try managedContext.save()
             
-            //Now we have set all the values. The next step is to save them inside the Core Data
-            
-            do {
-                try managedContext.save()
-                
-            } catch let error as NSError {
-                print("Could not save. \(error), \(error.userInfo)")
-            }
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
         }
+    }
     static func deleteData(){
         
         //As we know that container is set up in the AppDelegates so we need to refer that container.
@@ -134,12 +139,13 @@ class LoginController: UIViewController {
         let managedContext = appDelegate.persistentContainer.viewContext
         
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "User")
-       
+        
         do
         {
             let test = try managedContext.fetch(fetchRequest)
             for data in test{
-            managedContext.delete(data)
+                //Delete selected data
+                managedContext.delete(data)
             }
             do{
                 try managedContext.save()
@@ -155,10 +161,10 @@ class LoginController: UIViewController {
             print(error)
         }
     }
-    func retrieveData()->String{
-        var mail=""
+    func retrieveData(){
+        
         //As we know that container is set up in the AppDelegates so we need to refer that container.
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return "Error refering the container"}
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         
         //We need to create a context from this container
         let managedContext = appDelegate.persistentContainer.viewContext
@@ -166,23 +172,22 @@ class LoginController: UIViewController {
         //Prepare the request of type NSFetchRequest  for the entity
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "User")
         
-        //        fetchRequest.fetchLimit = 1
-        //        fetchRequest.predicate = NSPredicate(format: "username = %@", "Ankur")
-        //        fetchRequest.sortDescriptors = [NSSortDescriptor.init(key: "email", ascending: false)]
-        //
         do {
             let result = try managedContext.fetch(fetchRequest)
             for data in result as! [NSManagedObject] {
-                 mail=data.value(forKey: "mail") as! String
+                if let mail=data.value(forKey: "mail") as! String?{
+                    print(mail)
+                    self.performSegue(withIdentifier: "segueMap", sender: self)
+                }
+                else{
+                    print("The data is nil or not set")
+                }
             }
-           
         } catch {
             
             print("Failed")
         }
-         return mail
+        
     }
-    
-   
-
 }
+
