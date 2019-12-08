@@ -16,7 +16,7 @@ class ProfileController: UIViewController,UINavigationBarDelegate {
         super.viewDidLoad()
         navBar.delegate=self
         UINavigationBar.appearance().backgroundColor=UIColor.blue
-       fetchdata()
+        fetchdata()
         
     }
     func fetchdata(){
@@ -34,12 +34,17 @@ class ProfileController: UIViewController,UINavigationBarDelegate {
 //            print(error.localizedDescription)
 //        }
     }
+    //Logout button action that sign out current user
     @IBAction func LogOut(_ sender: UIBarButtonItem) {
         print("Logout tapped")
         let auth = Auth.auth()
         
         do {
+            //Sign out current user
             try auth.signOut()
+            //Delete user from CoreData
+            LoginController.deleteData()
+            //Segue back for login screen
             self.performSegue(withIdentifier: "logout", sender: self)
             print("Successfully signed out of Firebase Auth")
         } catch (let err) {
